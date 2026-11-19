@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>茶知識 LLM Wiki 與教學簡報</title>
+<style>
+:root{--green-50:#F1F6EE;--green-100:#E4EFDF;--green-300:#A8C5A0;--green-700:#4E6B4F;--cream:#FAF6EE;--white:#FFFFFF;--yellow:#F6EBC4;--tan-200:#D9C3A5;--tan-700:#7A5C3E;--text:#3F3A33;--text-soft:#6B655C}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--text);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.7}
+main{max-width:880px;margin:0 auto;padding:56px 24px 64px}
+h1{font-family:"Noto Serif TC","Songti TC",serif;color:var(--green-700);font-size:40px;line-height:1.25;margin:0 0 12px}
+.lead{font-size:19px;margin:0 0 36px;max-width:680px}
+.links{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media (max-width:600px){.links{grid-template-columns:1fr}}
+.links a{display:block;text-decoration:none;color:var(--text);background:var(--white);border:1px solid var(--tan-200);border-radius:14px;padding:22px 24px}
+.links a:hover,.links a:focus-visible{border-color:var(--green-700);outline:none;background:var(--green-50)}
+.links a.main{background:var(--green-100);border-color:var(--green-300)}
+.links h2{font-family:"Noto Serif TC",serif;color:var(--green-700);font-size:22px;margin:0 0 6px}
+.links p{margin:0;font-size:16px;color:var(--text-soft)}
+section{margin-top:44px}
+section h2{font-family:"Noto Serif TC",serif;color:var(--green-700);font-size:22px;border-bottom:1px solid var(--tan-200);padding-bottom:6px}
+ol{padding-left:22px}li{margin:4px 0}
+footer{color:var(--text-soft);font-size:14px;margin-top:48px}
+a{color:var(--green-700)}
+</style>
+</head>
+<body>
+<main>
+<h1>茶知識 LLM Wiki 與教學簡報</h1>
+<p class="lead">先用 Karpathy 的 LLM Wiki 做法建立「茶」的知識庫，再只從知識庫產生一份給新手看的教學 HTML 簡報。</p>
+
+<div class="links">
+  <a class="main" href="output/slides/tea-intro.html"><h2>教學簡報</h2><p>一片葉子的旅程：茶的入門課，35 張投影片，用 ← → 換頁</p></a>
+  <a class="main" href="wiki-site/index.html"><h2>LLM Wiki</h2><p>35 頁知識頁：六大茶類、台灣特色茶、製茶、沖泡</p></a>
+  <a href="wiki-site/AGENTS.html"><h2>規則書</h2><p>AGENTS.md：Wiki 的結構、流程與檢查規則</p></a>
+  <a href="wiki-site/log.html"><h2>操作紀錄</h2><p>log.md：每次 ingest、檢查與出錯的紀錄</p></a>
+</div>
+
+<section>
+<h2>流程</h2>
+<ol>
+  <li>取得資料，原文存入 <code>raw/</code>，先做完整性檢查</li>
+  <li>先討論、後生成：列出重點與疑問，確認後才寫入 <code>wiki/</code></li>
+  <li>寫入後檢查（來源、用詞、斷鏈），並記錄到 <code>log.md</code></li>
+  <li>查詢 Wiki 寫簡報大綱，大綱檢查（數字必須能在 Wiki 找到）</li>
+  <li>由大綱產生 HTML，逐頁截圖檢查；要修改就回到大綱重新產生</li>
+</ol>
+</section>
+
+<footer>原始檔案：<a href="https://github.com/yucihl/tea-llm-wiki">github.com/yucihl/tea-llm-wiki</a></footer>
+</main>
+</body>
+</html>
