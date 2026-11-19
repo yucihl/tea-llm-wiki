@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="zh-Hant-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>操作紀錄 log.md｜茶知識 LLM Wiki</title><style>
+:root{--green-50:#F1F6EE;--green-100:#E4EFDF;--green-300:#A8C5A0;--green-700:#4E6B4F;--cream:#FAF6EE;--white:#FFFFFF;--yellow:#F6EBC4;--tan-200:#D9C3A5;--tan-700:#7A5C3E;--text:#3F3A33;--text-soft:#6B655C}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--text);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.75;font-size:17px}
+header{background:var(--green-100);border-bottom:1px solid var(--tan-200)}
+header nav{max-width:960px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center}
+header a{color:var(--green-700);text-decoration:none;font-weight:500}header a:hover{text-decoration:underline}
+header .brand{font-family:"Noto Serif TC",serif;font-weight:700;font-size:19px;margin-right:auto}
+main{max-width:960px;margin:0 auto;padding:28px 24px 64px}
+h1,h2,h3{font-family:"Noto Serif TC","Songti TC",serif;color:var(--green-700);line-height:1.35}
+h1{font-size:32px;margin:8px 0 12px}h2{font-size:24px;margin-top:36px;border-bottom:1px solid var(--tan-200);padding-bottom:6px}
+a{color:var(--green-700)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;font-size:14px}
+.meta span{background:var(--white);border:1px solid var(--tan-200);border-radius:999px;padding:2px 12px;color:var(--text-soft)}
+.meta .conf-high{background:var(--green-100)}.meta .conf-low{background:var(--yellow)}
+table{border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto;max-width:100%}
+th,td{border:1px solid var(--tan-200);padding:8px 12px;text-align:left;vertical-align:top;background:var(--white)}
+th{background:var(--green-100);color:var(--green-700)}
+blockquote{margin:12px 0;padding:8px 16px;background:var(--yellow);border-radius:10px;border:none}
+code{background:var(--green-50);padding:1px 5px;border-radius:4px;font-size:.92em}
+pre{background:var(--white);border:1px solid var(--tan-200);border-radius:10px;padding:14px;overflow-x:auto}pre code{background:none;padding:0}
+footer{max-width:960px;margin:0 auto;padding:0 24px 40px;color:var(--text-soft);font-size:14px}
+</style></head><body><header><nav><a class="brand" href="../index.html">茶知識 LLM Wiki</a><a href="index.html">Wiki 目錄</a><a href="glossary.html">名詞表</a><a href="AGENTS.html">規則書</a><a href="log.html">操作紀錄</a><a href="../output/slides/tea-intro.html">教學簡報</a><a href="https://github.com/yucihl/tea-llm-wiki">GitHub</a></nav></header><main><h1>操作紀錄</h1>
+<blockquote>
+<p>只能附加，不可修改舊紀錄。格式見 AGENTS.md 第 6 節。</p>
+</blockquote>
+<h2>[2026-11-18] schema | 建立 AGENTS.md 與資料夾結構</h2>
+<ul>
+<li>依討論結果確立：簡報分區塊、每區塊 ≤ 8 頁；範圍為六大茶類＋台灣特色茶；英文檔名＋中文標題；ingest 前先列 3–5 重點與 1–2 疑問。</li>
+<li>發生的問題：無</li>
+</ul>
+<h2>[2026-11-18] schema | 新增簡報視覺規範與 raw 檔案格式</h2>
+<ul>
+<li>新增 AGENTS.md 第 3.4 節（raw/ 原始資料 metadata 格式）、第 8 節（淡綠主色、淺咖啡／淺黃／白／米色輔色、柔和風格）；檢查表加入視覺規範項目。</li>
+<li>原因：使用者指定簡報色系與風格；需統一原始資料的來源標示，方便日後查核。</li>
+<li>發生的問題：無</li>
+</ul>
+<h2>[2026-11-18] schema | CLAUDE.md 改用 @ 匯入 AGENTS.md</h2>
+<ul>
+<li>CLAUDE.md 由「請遵循 AGENTS.md」改為「請遵循 @AGENTS.md」。</li>
+<li>原因：Claude Code 會把 @檔名 的內容自動載入，確保每次對話開始時規則都已讀入，而不是只看到一句提示。</li>
+<li>發生的問題：無</li>
+</ul>
+<h2>[2026-11-18] fix | 取得資料失敗：raw 無法自動存入全文</h2>
+<ul>
+<li>嘗試自動抓取「茶」（維基百科）與 BESTEA 泡茶指南全文存入 raw/。</li>
+<li>發生的問題：</li>
+<li>節點：取得資料（存入 raw/）</li>
+<li>錯誤 1：工作環境的網路限制擋下直接下載（連線被拒）。</li>
+<li>錯誤 2：改用網頁讀取工具時，工具只回傳「摘要」而非原文；若直接存入，raw/ 會變成 LLM 改寫過的內容，違反「raw 是事實依據」的原則。</li>
+<li>修正：改為建立含 metadata 的 raw 檔，正文由使用者手動貼上（AGENTS.md 3.4 方法 C）。</li>
+<li>觀察：BESTEA 文章為品牌網站，含商品推薦段落；水溫等數字需與官方來源交叉比對。維基「茶」條目部分段落標有「來源請求」「可疑」。</li>
+<li>是否修改 AGENTS.md：提議新增「raw 完整性檢查」與「PDF 附 metadata 檔」規則，待使用者同意。</li>
+</ul>
+<h2>[2026-11-18] schema | 新增 raw 完整性檢查與 PDF metadata 規則</h2>
+<ul>
+<li>AGENTS.md 4.1 新增步驟 0「raw 完整性檢查」；3.4 新增 PDF／圖片附 <code>.meta.md</code>、略過章節須寫 <code>excluded:</code>。</li>
+<li>原因：前一筆 fix 紀錄中，取得資料節點拿到的是摘要而非原文，且錯誤不易察覺；把檢查往前移到 ingest 之前，避免錯誤一路傳到 Wiki 與簡報。</li>
+<li>發生的問題：無</li>
+</ul>
+<h2>[2026-11-18] fix | 存入 raw：維基「茶」與 BESTEA 泡茶指南</h2>
+<ul>
+<li>使用者手動貼上兩篇正文，合併進已建立 metadata 的 raw 檔。</li>
+<li>發生的問題：</li>
+<li>節點：存入 raw/（合併 metadata 與正文的腳本）</li>
+<li>錯誤：<code>excluded:</code> 欄位被插在 frontmatter 結束線之外，造成 metadata 格式錯誤。</li>
+<li>發現方式：完整性檢查時以 YAML 解析 metadata。</li>
+<li>修正：移回 frontmatter 內，重新檢查通過。</li>
+<li>raw 完整性檢查結果：兩篇皆通過。</li>
+<li>wikipedia-tea：正文約 7,800 字，保留 2 處「來源請求」標記。</li>
+<li>bestea-brew-tea-guide：第一～十節完整；第 11 節（商品）、第 12 節（FAQ）未收錄，已寫入 excluded。</li>
+</ul>
+<h2>[2026-11-18] ingest | 維基百科「茶」＋BESTEA 泡茶指南（批次 2 篇）</h2>
+<ul>
+<li>討論結果（使用者確認）：
+  1. 高山茶大多為烏龍茶 → 保留維基「綠茶」說法並標 ⚠️衝突，待茶改場來源確認。
+  2. 詞源收錄為小概念頁，簡報區塊 A 只用 1 頁。
+  3. BESTEA 茶水比：第五節依泡法、第七節依茶類，兩者不矛盾 → 比較頁拆成兩張表。
+  4. 全 Wiki 統一「氧化程度（俗稱發酵）」，黑茶保留「後發酵」。</li>
+<li>新增 11 頁：sources ×2、concepts ×6、teas ×1、comparisons ×1、glossary 改版；更新 index.md（含待補資料清單）。</li>
+<li>寫入後檢查：以 tools/check_wiki.py 檢查 frontmatter、來源存在、斷鏈、孤兒頁、index 收錄、「發酵」用詞 → 全部通過；另以植入錯誤測試確認檢查程式能抓到斷鏈與用詞錯誤。</li>
+<li>發生的問題：</li>
+<li>節點：整理重點（討論階段）</li>
+<li>錯誤：agent 把 BESTEA 兩種茶水比誤判為「內部矛盾」，經使用者指出為不同分類角度。</li>
+<li>影響：若未經討論直接寫入，會在 Wiki 中留下錯誤的 ⚠️衝突標記，並降低可信度。</li>
+<li>對應：維持「先討論、後生成」關卡；比較頁標明每張表的分類角度。</li>
+</ul>
+<h2>[2026-11-18] fix | 存入 raw：茶改場資料 4 篇（待補網址）</h2>
+<ul>
+<li>存入：tbrs-taiwan-specialty-teas（對話貼上）、tbrs-central-south-tea-regions、tbrs-taiwan-aged-tea-1、tbrs-dongding-aged-tea-2。</li>
+<li>raw 完整性檢查（步驟 0）：</li>
+<li>4 篇皆有正文、title、accessed。</li>
+<li>❌ 4 篇皆缺 url：嘗試以標題搜尋原始網頁未找到確切頁面 → 依規則暫停寫入 Wiki，請使用者補網址。</li>
+<li>tbrs-taiwan-aged-tea-1 正文可能不完整（止於第五節第 7 小點），已寫入 excluded。</li>
+<li>發生的問題：</li>
+<li>節點：取得資料（存入 raw/）</li>
+<li>錯誤類型：來源 metadata 不完整（缺網址）。若未檢查直接 ingest，簡報頁尾將無法標示可查證的來源。</li>
+<li>發現方式：步驟 0 完整性檢查（前一次 schema 修改新增的檢查）——檢查前移後第一次實際攔下問題。</li>
+</ul>
+<h2>[2026-11-18] fix | 補齊茶改場 4 篇網址</h2>
+<ul>
+<li>使用者提供目錄頁 https://www.tbrs.gov.tw/ws.php?id=1496；讀取後取得 14 個子頁網址，填入 4 個 raw 檔（specialty-teas 另列 sub_urls）。</li>
+<li>raw 完整性檢查重跑：6 篇全部通過。</li>
+</ul>
+<h2>[2026-11-18] ingest | 茶改場 4 篇（臺灣特色茶、中南部茶區、老茶一、老茶二）</h2>
+<ul>
+<li>討論結果（使用者確認）：
+  1. 凍頂歸類：主架構用現行風味輪名稱；另設冷知識頁「台灣的『烏龍』很多其實是包種」。
+  2. 範圍：台茶簡史、茶葉保存各收 1 頁；老茶收藏與評鑑不收。
+  3. 區塊 D 定為 8 頁（見 output/slides/block-plan.md）；碧螺春移至區塊 C。</li>
+<li>新增 18 頁：sources ×4、concepts ×5（tea-processing、taiwan-tea-flavor-wheel、oolong-vs-baozhong、taiwan-tea-history、tea-storage）、teas ×9。</li>
+<li>更新：taiwan-tea-overview（改用茶改場產區資料，confidence low → high）、tea-classification（補齊氧化程度、普洱生熟茶）、tea-compounds、glossary（新增 12 詞）、sources/wikipedia-tea、index.md。</li>
+<li>✅ 解決衝突：高山茶分類（維基「綠茶」→ 茶改場「輕度氧化的球形烏龍茶」）。</li>
+<li>⚠️ 新衝突：凍頂氧化程度（15–20% vs 中度）；台茶外銷起始年份（1865 vs 1869）；鹿谷比賽年份（1975 vs 1976）。皆已並列來源並決定簡報寫法。</li>
+<li>發生的問題：
+  1. 節點：寫入 Wiki（更新既有頁）<ul>
+<li>錯誤：更新 glossary 時，比對用的舊文字少了粗體符號，導致替換失敗。</li>
+<li>發現方式：替換前的 assert 檢查直接報錯，沒有產生錯誤內容；前面已完成的修改不受影響，補改後通過。
+  2. 節點：寫入後檢查（check_wiki.py）</li>
+<li>錯誤：檢查規則過嚴——官方分類名稱（部分發酵茶等）與「討論『發酵』這個詞」的句子被誤判為用詞錯誤（4 處誤報）。</li>
+<li>修正：glossary 新增「官方分類名稱保留原樣」規則，檢查程式同步放寬；之後再植入錯誤測試，確認仍能抓到真正的錯誤。</li>
+<li>觀察：檢查節點本身也會出錯，所以每次修改檢查規則後都要用植入錯誤測試一次。</li>
+</ul>
+</li>
+</ul>
+<h2>[2026-11-18] lint | 第 1 次健康檢查（已 ingest 6 篇）</h2>
+<ul>
+<li>斷鏈、孤兒頁、index 漏列、用詞：全部通過。</li>
+<li>待補資料（簡報需要）：茶 vs 花草茶（A）、萎凋與殺菁的原理（B）、黃茶與白茶製法（C）、咖啡因含量與沖泡參數的第二來源（E）。</li>
+<li>區塊 D 資料已足夠，可進入大綱製作。</li>
+</ul>
+<h2>[2026-11-18] fix | 存入 raw：BESTEA 六大茶系、Udyan Tea 真茶 vs 花草茶、sftiherbtea 草本茶</h2>
+<ul>
+<li>使用者貼上 3 篇正文並附網址。</li>
+<li>raw 完整性檢查：3 篇通過；udyanntea 可能缺結論段、sftiherbtea 缺標題所提的「熱泡 vs 冷泡」段，皆寫入 excluded。</li>
+<li>發生的問題：無</li>
+</ul>
+<h2>[2026-11-18] ingest | BESTEA 六大茶系、Udyan Tea、sftiherbtea、維基「草本茶」（批次 4 篇）</h2>
+<ul>
+<li>討論結果（使用者確認）：
+  1. 氧化程度百分比衝突（凍頂 30–50%、東方美人 60–80%）：以茶改場為主，簡報不寫百分比。
+  2. 咖啡因：兩篇商業來源數字相同、疑似同源 → confidence medium，簡報寫「約」並註明出處。
+  3. 名詞：使用者補充維基「草本茶」作為依據 → 正式名稱「草本茶」（又名花草茶）；簡報標題可用「茶 vs 花草茶」；花茶 ≠ 花草茶。
+  4. 冷知識頁併入區塊 D6（凍頂與鐵觀音）。</li>
+<li>新增 6 頁：sources ×4、concepts/true-tea-vs-herbal-tea、comparisons/six-tea-types；更新 tea-classification（補黃茶、白茶、黑茶微生物）、tea-processing（殺菁原理、做青、悶黃）、tea-compounds（咖啡因、茶黃素）、oolong-vs-baozhong、brewing-by-tea-type（黃茶）、glossary（新增 8 詞）、index。</li>
+<li>⚠️ 新發現：花草茶咖啡因——商業網站說「完全無」，維基說「不一定含有」→ 簡報寫「大多不含」。</li>
+<li>寫入後檢查：35 頁全部通過。</li>
+<li>發生的問題：</li>
+<li>節點：寫入 Wiki（更新 oolong-vs-baozhong）</li>
+<li>錯誤：替換後產生重複語句（「茶改場來源都來自茶改場」），檢查程式抓不到語意問題，人工抽查時發現並修正。</li>
+<li>觀察：自動檢查只能抓格式與用詞，語意通順仍需人工或另一次閱讀檢查。</li>
+</ul>
+<h2>[2026-11-18] schema | 簡報流程改為「大綱＋HTML 草稿同時審閱」</h2>
+<ul>
+<li>AGENTS.md 4.3：原本「使用者確認大綱後才產生 HTML」，改為大綱檢查通過後即可產生 HTML 草稿，與大綱一起給使用者審閱。</li>
+<li>原因：使用者希望先看到簡報實際畫面，再一次給修改意見；照原流程需多一次來回。</li>
+<li>風險與對應：少了「大綱確認」這道關卡，草稿可能夾帶 Wiki 以外的內容 → 新增兩條規則：
+  1. 簡報每個事實只能來自大綱列出的 Wiki 頁（大綱檢查會驗證）。
+  2. 使用者修改時先改大綱或 Wiki，再重新產生 HTML，不直接改 HTML 文字，避免大綱、Wiki、簡報三者不一致。</li>
+</ul>
+<h2>[2026-11-18] slides | 第一版完整簡報草稿（A–E 31 頁＋封面、目錄、總結、參考資料，共 35 張）</h2>
+<ul>
+<li>新增工具：tools/outline_lib.py（解析大綱）、tools/check_outline.py（大綱檢查）、tools/build_html.py（由大綱產生 HTML）、tools/check_html.py（Chrome 逐頁截圖＋版面檢查）、tools/slides.css、tools/slides.js。</li>
+<li>設計決定：簡報 HTML 完全由大綱產生，不手改 HTML，落實「先改大綱再重生」。</li>
+<li>大綱檢查：31 頁、各區塊 ≤ 8；新增「簡報上每個數字都必須出現在引用的 Wiki 頁」檢查。</li>
+<li>發生的問題（依節點）：
+  1. 節點：大綱檢查<ul>
+<li>第一次就 0 錯誤，懷疑檢查無效 → 植入 4 個錯誤（用詞、百分比、不在 Wiki 的數字、竄改年份 2008→2010），全部抓到。</li>
+<li>6 個提醒：Wiki 頁的 slide_block 標記沒跟上實際用途 → 更新 4 個 Wiki 頁。
+  2. 節點：產生 HTML</li>
+<li>解析器漏了 <code>blocks:</code> 清單格式，產生失敗 → 修正 outline_lib.py。
+  3. 節點：HTML 檢查（程式）</li>
+<li>第 1 輪：3 張溢出（E3 水溫表、E6 咖啡因註解壓到頁尾、參考資料頁超出邊界）。</li>
+<li>修正：E6 的註解改成表格旁提示框（<strong>改大綱</strong>，不改 HTML）；長表格改兩欄；參考資料改兩欄。</li>
+<li>第 2 輪（放大字級後）：5 張溢出 → 收緊留白、緊湊列高 → 通過。
+  4. 節點：HTML 檢查（人工看截圖）——<strong>程式漏抓</strong></li>
+<li>B4 表格被自動拆成兩欄後，左表過寬被右表蓋住，製程文字看起來被截斷；程式檢查顯示「通過」。</li>
+<li>修正：只有短字表格才拆欄；檢查程式新增「並排區塊互相重疊」檢查，並重現錯誤確認能抓到。</li>
+<li>新檢查第一次執行有 1 個誤報（C2 光譜標籤），改 CSS 解決，不在檢查程式開例外。
+  5. 其他人工視覺調整：下半部空白（內容垂直置中、字級放大）、頁尾來源過長（名詞表不計入來源）、時間軸折行、標題斷行平均。</li>
+</ul>
+</li>
+<li>最終：大綱檢查 0 錯誤；HTML 檢查 35 張 0 問題、無 JS 錯誤、鍵盤換頁正常、無規範外色碼。</li>
+<li>反思重點：最常出錯的節點是「HTML 檢查」本身——自動檢查只抓得到寫成規則的問題，視覺上的錯誤要靠截圖人工看，看到後再把它寫成新規則（檢查往前、往自動化移）。</li>
+</ul>
+<h2>[2026-11-18] slides | 修改：A1、D2、D3 改為圖像呈現（使用者要求）</h2>
+<ul>
+<li>A1「茶」這個字 → 世界地圖色塊（cha／chai／tea 三色＋中國起點），畫出陸路與海路。</li>
+<li>D2 臺茶風味輪 → 環狀風味輪，順時針＝氧化由輕到重，兩側卡片列出代表茶與風味。</li>
+<li>D3 產區地圖 → 台灣地圖依北／中／南／東上色，11 個產地標點與標籤。</li>
+<li>依 4.3 規則先改大綱（新版型 worldmap、wheel、twmap），再重新產生 HTML；D2 新增引用 6 個茶種頁的風味描述，大綱檢查通過。</li>
+<li>新增 tools/maps/make_maps.mjs 與 maps.json（Natural Earth 公眾領域世界地圖、內政部台灣縣市界開放資料）。</li>
+<li>發生的問題：
+  1. 節點：產生 HTML（D3）——<strong>用字不一致造成靜默失敗</strong><ul>
+<li>地圖資料寫「台中市、台東縣」，大綱寫「臺中市、臺東縣」，比對不到，兩縣沒有上色，程式也沒報錯；看截圖才發現。</li>
+<li>修正：比對時統一「臺／台」；並新增「大綱裡的縣市在地圖找不到就停止產生」的檢查。</li>
+<li>觀察：glossary 統一的是 Wiki 內部用字，外部資料進來時也要對齊用字。
+  2. 節點：HTML 檢查——<strong>檢查程式誤判，修正時又引入漏洞</strong></li>
+<li>誤判：SVG 內畫框外的國家、SVG 文字被當成溢出或截斷。</li>
+<li>改為只檢查 SVG 外框後，副作用是圖中文字字級不再檢查；補回「依縮放後實際大小檢查圖中文字」，立刻抓到 A1「中國」標籤只有 16px → 放大。
+  3. 版面：地圖太高把標題擠在一起、標籤被裁切、引線交叉 → 調整尺寸、標籤左右分配。</li>
+</ul>
+</li>
+<li>最終：Wiki 檢查、大綱檢查、HTML 檢查（35 張）全部通過。</li>
+</ul>
+<h2>[2026-11-19] schema | 準備上傳 GitHub：新增可瀏覽的 Wiki 網站與首頁</h2>
+<ul>
+<li>新增 tools/build_wiki_site.py：把 wiki/、index.md、AGENTS.md、log.md 轉成 wiki-site/ 的 HTML，<code>[[連結]]</code> 轉成可點擊的連結，並檢查所有連結（斷鏈：無）。</li>
+<li>新增專案首頁 index.html、README.md（含簡報與 Wiki 的 GitHub Pages 連結）、.nojekyll、.gitignore。</li>
+<li>原因：GitHub 不支援 Obsidian 的 <code>[[頁面]]</code> 連結；簡報的 claude.ai 連結只有本人看得到，需要公開網址。</li>
+<li>決定：使用者選擇 raw/ 原文全部公開上傳（已告知商業網站文章的著作權風險）；repo 名稱 tea-llm-wiki。</li>
+<li>發生的問題：</li>
+<li>節點：上傳 GitHub</li>
+<li>錯誤：此工作環境的 GitHub 權限只能操作既有 repo，無法新建 repo；瀏覽器也未連線。</li>
+<li>對應：改由使用者自行建立 repo 並上傳。</li>
+</ul></main><footer>由 <code>tools/build_wiki_site.py</code> 從 Wiki 的 Markdown 自動產生；原始檔見 <a href="https://github.com/yucihl/tea-llm-wiki">GitHub</a>。</footer></body></html>
